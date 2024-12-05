@@ -6,7 +6,7 @@
       "esModuleInterop": true, // user imports instead of require module
       "forceConsistentCasingInFileNames": true, // Note that this name is deprecated
       "outDir": "dist",
-      "removeComments": true,
+      "removeComments": true
     },
     "include": ["**/*.ts"],
     "exclude": ["node_modules"]

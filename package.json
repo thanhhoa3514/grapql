@@ -10,10 +10,16 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "express": "^4.21.1"
+    "apollo-server-express": "^3.13.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.1",
+    "graphql": "^16.9.0",
+    "mongoose": "^8.8.3"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
+    "@types/graphql": "^14.2.3",
+    "@types/mongoose": "^5.11.96",
     "@types/node": "^22.10.1",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
