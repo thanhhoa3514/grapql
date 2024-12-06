@@ -1,12 +1,19 @@
+import { SortOrder } from "mongoose";
+
 import Article from "../models/article.model";
 import CategoryArticle from "../models/category.model";
 import { IArticle } from "../typeDefs/article.typeDefs";
 import { ICategoryArticle } from "../typeDefs/category.typeDefs";
-export const resolversArticle =  {
+
+export const resolversArticle = {
     Query: {
 
-        getListArticle: async (): Promise<IArticle[]> => {
-            const articles = await Article.find({ deleted: false }).lean();
+        getListArticle: async (_: any, { sortKey, sortValue }: { sortKey?: string; sortValue?: string }): Promise<IArticle[]> => {
+
+            const sortOptions: { [key: string]: SortOrder } = sortKey && sortValue
+                ? { [sortKey]: sortValue === "asc" ? 1 : -1 }
+                : {};
+            const articles = await Article.find({ deleted: false }).sort(sortOptions as { [key: string]: SortOrder }).lean();
             return articles.map(article => ({
                 ...article,
                 _id: article._id.toString()
@@ -19,11 +26,11 @@ export const resolversArticle =  {
                 _id: article._id.toString()
             } : null;
         },
-        
+
     },
-    Article:{
+    Article: {
         category: async (article: IArticle): Promise<ICategoryArticle[]> => {
-            const categoryId= article.category;
+            const categoryId = article.category;
             const category = await Article.find({
                 _id: categoryId
             });
@@ -36,18 +43,18 @@ export const resolversArticle =  {
             await article.save();
             return {
                 _id: article._id.toString(),
-               ...input
+                ...input
             };
         },
         updateArticle: async (_: any, { id, input }: { id: string, input: Partial<IArticle> }): Promise<IArticle | null> => {
             const article = await Article.findByIdAndUpdate(id, input, { new: true });
-            return article? {
+            return article ? {
                 _id: article._id.toString(),
-               ...input
+                ...input
             } : null;
         },
         deleteArticle: async (_: any, { id }: { id: string }): Promise<boolean> => {
-            await Article.findByIdAndUpdate(id, { deleted: true,deletedAt: new Date() });
+            await Article.findByIdAndUpdate(id, { deleted: true, deletedAt: new Date() });
             return true;
         }
 

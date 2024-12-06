@@ -23,7 +23,7 @@ export const typeDefsArticle = gql`
 
     type Query {
 
-        getListArticle:[Article]
+        getListArticle(sortKey:String,sortValue:String):[Article]
         getArticleById(id:ID):Article
 
     }
