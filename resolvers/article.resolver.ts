@@ -8,13 +8,14 @@ import { ICategoryArticle } from "../typeDefs/category.typeDefs";
 export const resolversArticle = {
     Query: {
 
-        getListArticle: async (_: any, { sortKey, sortValue,currentPage,limitPage,filterKey,filterValue }:
+        getListArticle: async (_: any, { sortKey, sortValue,currentPage,limitPage,filterKey,filterValue,keyWords }:
             {    sortKey?: string;
                  sortValue?: string;
                  currentPage: number;
                  limitPage: number;
                  filterKey?: string;
                  filterValue?: string;
+                 keyWords?: string
 
             }): 
              Promise<IArticle[]> => {
@@ -26,9 +27,20 @@ export const resolversArticle = {
                 ? { [sortKey]: sortValue === "asc" ? 1 : -1 }
                 : {};
 
-            const filterOptions = filterKey && filterValue 
-            ? { [filterKey]: filterValue, deleted: false } 
-            : { deleted: false };
+                let filterOptions: any = { deleted: false };
+
+                if (filterKey && filterValue) {
+                    filterOptions[filterKey] = filterValue;
+                }
+
+
+            if (keyWords) {
+                const keywordRegex = new RegExp(keyWords, "i");
+                filterOptions.$or = [
+                    { title: keywordRegex },
+                    { description: keywordRegex },
+                ];
+            }
             const articles = await Article.find(filterOptions)
                 .sort(sortOptions as { [key: string]: SortOrder })
                 .skip(skip)
