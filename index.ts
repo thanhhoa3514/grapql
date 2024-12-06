@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import * as database from "./config/database";
 import {  ApolloServer } from "apollo-server-express";
 import { typeDefs } from "./typeDefs/index.typDefs";
-import { resolvers } from "./resolvers";
+import { resolvers } from "./resolvers/index.resolver";
 dotenv.config();
 database.connect();
 const app: Express = express();
@@ -14,7 +14,7 @@ const port: string | number = process.env.PORT || 3000;
 async function startServer() {
     const server = new ApolloServer({
         typeDefs:typeDefs,
-        resolvers
+        resolvers:resolvers
     });
 
     await server.start();
