@@ -8,18 +8,28 @@ import { ICategoryArticle } from "../typeDefs/category.typeDefs";
 export const resolversArticle = {
     Query: {
 
-        getListArticle: async (_: any, { sortKey, sortValue,currentPage,limitPage }:
+        getListArticle: async (_: any, { sortKey, sortValue,currentPage,limitPage,filterKey,filterValue }:
             {    sortKey?: string;
                  sortValue?: string;
                  currentPage: number;
                  limitPage: number;
+                 filterKey?: string;
+                 filterValue?: string;
+
             }): 
              Promise<IArticle[]> => {
+            // Pagination
             const skip = (currentPage - 1) * limitPage;   
+
+            // Sorting and filtering options
             const sortOptions: { [key: string]: SortOrder } = sortKey && sortValue
                 ? { [sortKey]: sortValue === "asc" ? 1 : -1 }
                 : {};
-            const articles = await Article.find({ deleted: false })
+
+            const filterOptions = filterKey && filterValue 
+            ? { [filterKey]: filterValue, deleted: false } 
+            : { deleted: false };
+            const articles = await Article.find(filterOptions)
                 .sort(sortOptions as { [key: string]: SortOrder })
                 .skip(skip)
                 .limit(limitPage)
