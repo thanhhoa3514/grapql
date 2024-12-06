@@ -8,17 +8,9 @@ export interface IArticle {
     category?: string
 
 }
-export interface ICategoryArticle {
 
-    title: string;
-    avatar?: string;
-    deleted: boolean;
-    deletedAt?: Date | null;
-    createdAt?: Date;
-    updatedAt?: Date;
-}
 // Define the GraphQL schema
-export const typeDefs = gql`
+export const typeDefsArticle = gql`
 
     type Article{
         id:ID!,
@@ -27,38 +19,27 @@ export const typeDefs = gql`
         description: String,
         category:Category
     }
-    type Category{
-        id:ID,
-        title: String,
-        avatar: String,
-    }
+   
 
     type Query {
-        hello: String,
+
         getListArticle:[Article]
         getArticleById(id:ID):Article
-        getListCategory:[Category]
-        getCategory(id:ID):Category
+
     }
     input ArticleInput{
         title:String!,
         avatar:String,
-
         description:String!,
         categoryId:String!
     }
 
-    input CategoryInput{
-        title:String,
-        avatar:String,
-
-    }
+    
     type Mutation {
         addArticle(article:ArticleInput): Article
         updateArticle(id:ID!, title:String!, avatar:String, description:String!): Article
         deleteArticle(id:ID!): Boolean
-        createCategory(category:CategoryInput): Category
-        updateCategory(id:ID!,category:CategoryInput ): Article
+
     }
  
 `;

@@ -4,7 +4,7 @@ import { IArticle } from "./typeDefs";
 import { ICategoryArticle } from "./typeDefs";
 export const resolvers =  {
     Query: {
-        hello: () => "Hello, world!",
+
         getListArticle: async (): Promise<IArticle[]> => {
             const articles = await Article.find({ deleted: false }).lean();
             return articles.map(article => ({
@@ -35,7 +35,7 @@ export const resolvers =  {
     Article:{
         category: async (article: IArticle): Promise<ICategoryArticle[]> => {
             const categoryId= article.category;
-            const category = await CategoryArticle.find({
+            const category = await Article.find({
                 _id: categoryId
             });
             return category as ICategoryArticle[];
