@@ -8,12 +8,22 @@ import { ICategoryArticle } from "../typeDefs/category.typeDefs";
 export const resolversArticle = {
     Query: {
 
-        getListArticle: async (_: any, { sortKey, sortValue }: { sortKey?: string; sortValue?: string }): Promise<IArticle[]> => {
-
+        getListArticle: async (_: any, { sortKey, sortValue,currentPage,limitPage }:
+            {    sortKey?: string;
+                 sortValue?: string;
+                 currentPage: number;
+                 limitPage: number;
+            }): 
+             Promise<IArticle[]> => {
+            const skip = (currentPage - 1) * limitPage;   
             const sortOptions: { [key: string]: SortOrder } = sortKey && sortValue
                 ? { [sortKey]: sortValue === "asc" ? 1 : -1 }
                 : {};
-            const articles = await Article.find({ deleted: false }).sort(sortOptions as { [key: string]: SortOrder }).lean();
+            const articles = await Article.find({ deleted: false })
+                .sort(sortOptions as { [key: string]: SortOrder })
+                .skip(skip)
+                .limit(limitPage)
+                .lean();
             return articles.map(article => ({
                 ...article,
                 _id: article._id.toString()
