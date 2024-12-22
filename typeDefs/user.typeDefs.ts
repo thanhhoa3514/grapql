@@ -10,8 +10,6 @@ export interface IUserService {
 }
 // Define the GraphQL schema
 export const typeDefsUser = gql`
-
-    
     type User{
         id:ID,
         fullname: String,
@@ -20,6 +18,10 @@ export const typeDefsUser = gql`
         code:Integer,
         message: String
     }
+    type Query {
+        getUser(id:ID): User
+    }
+    
 
     input RegisterUserInput{
         fullname:String!,

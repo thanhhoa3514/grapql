@@ -2,8 +2,27 @@ import User from "../models/users.model";
 import { IUserService } from "../typeDefs/user.typeDefs";
 import bcrypt from "bcrypt"
 import { generateStringRandom } from "../helpers/generateRandom";
+import { Query } from "mongoose";
 // Resolvers
 export const resolversUSer =  {    
+    Query:{
+        getUser: async (_: any, { id }: { id: string }) => {
+            const user = await User.findById(id);
+            if(!user){
+                return{
+                    code:404,
+                    message:"User not found",
+                }
+            }
+            return {
+                code:200,
+                message:"User found",
+                fullname:user.fullname,
+                email:user.email,
+                token:user.token,
+            };
+        }
+    },
     Mutation: {
         registerUser:async (_: any, {user}:{user:IUserService} ) => {
             const userExist= await User.findById({
