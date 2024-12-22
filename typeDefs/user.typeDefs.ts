@@ -15,26 +15,42 @@ export const typeDefsUser = gql`
         fullname: String,
         token: String,
         email: String,
-        code:Integer,
-        message: String
+        
+    }
+    type AuthResponse {
+        code: Int!
+        message: String!
+        id: ID
+        fullname: String
+        email: String
+        token: String
     }
     type Query {
-        getUser(id:ID): User
+        getUser(id:ID): AuthResponse!
     }
     
 
-    input RegisterUserInput{
-        fullname:String!,
-        password:String!,
-        email:String!
+    input RegisterUserInput {
+        fullname: String!
+        email: String!
+        password: String!
     }
-    input LoginUserInput{
-        password:String!,
-        email:String!
+    input LoginUserInput {
+        email: String!
+        password: String!
     }
     type Mutation {
-        registerUser(user:RegisterUserInput): User
-        loginUser(user:LoginUserInput): User
+        # Register new user
+        registerUser(user: RegisterUserInput!): AuthResponse!
+        
+        # Login existing user
+        loginUser(user: LoginUserInput!): AuthResponse!
+        
+        # Update user profile
+        updateUser(id: ID!, user: RegisterUserInput!): AuthResponse!
+        
+        # Soft delete user
+        deleteUser(id: ID!): AuthResponse!
     }
  
 `;
