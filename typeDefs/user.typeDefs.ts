@@ -3,7 +3,7 @@ import { gql } from "apollo-server-express";
 export interface IUserService {
     fullname: string;
     password: string;
-    token: string;
+    token?: string;
     email: string;
     deleted?: boolean;
     deletedAt?: Date | null;
@@ -26,9 +26,13 @@ export const typeDefsUser = gql`
         password:String!,
         email:String!
     }
+    input LoginUserInput{
+        password:String!,
+        email:String!
+    }
     type Mutation {
         registerUser(user:RegisterUserInput): User
-        updateCategory(id:ID!,category:CategoryInput ): Article
+        loginUser(user:LoginUserInput): User
     }
  
 `;

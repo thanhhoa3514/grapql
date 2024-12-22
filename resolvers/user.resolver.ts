@@ -35,6 +35,36 @@ export const resolversUSer =  {
                 token:result.token,
             }
         },
+        loginUser:async (_: any,{ user }: { user: { email: string; password: string } }) => {
+            const {email, password} =user;
+            const userExist= await User.findOne({
+                email: email,
+                deleted: false
+            });
+            if(!userExist){
+                return {
+                    code:400,
+                    message:"User not found",
+                }
+            }else{
+                const match = await bcrypt.compare(password, userExist.password!!);
+                if(match){
+                    return {
+                        code:200,
+                        message:"User logged in successfully",
+                        id:userExist.id,
+                        fullname:userExist.fullname,
+                        email:userExist.email,
+                        token:userExist.token,
+                    }
+                }else{
+                    return {
+                        code:400,
+                        message:"Invalid password",
+                    }
+                }
+            }
+        }
         
     }
 };
