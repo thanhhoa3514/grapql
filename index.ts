@@ -22,6 +22,7 @@ async function startServer() {
     const server = new ApolloServer({
         typeDefs:typeDefs,
         resolvers:resolvers,
+        introspection: true,
         context: async ({ req }): Promise<CustomContext> => {
             // Get token from authorization header
             const token = req.headers.authorization?.split(" ")[1] || "";
